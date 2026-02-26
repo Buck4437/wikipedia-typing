@@ -1,47 +1,54 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
+    Wikipedia Typing
   </header>
 
   <main>
-    <TheWelcome />
+    <SearchTab @search="handleSearch" />
+    <TypingTab :text="displayText" />
   </main>
 </template>
 
+<script setup lang="ts">
+import wiki from 'wikipedia';
+import SearchTab from './components/SearchComponent.vue'
+import TypingTab from './components/TypingTab.vue'
+import { ref } from 'vue';
+
+const displayText = ref('');
+
+function generateQueryString(url: string) {
+  const host = new URL(url).host;
+  const pageTitle = url.split('/').pop()?.replace(/_/g, ' ');
+  const string = `https://${host}/w/api.php?origin=*&action=query&format=json&prop=extracts&explaintext=true&titles=${pageTitle}`;
+  return string;
+}
+
+async function handleSearch(input: string) {
+  try {
+    const url = generateQueryString(input);
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const page = Object.values(data.query.pages)[0] as {title: string, extract: string};
+        const title = page.title;
+        const content = page.extract;
+        const combinedText = `${title}\n\n${content}`;
+        console.log(combinedText)
+        displayText.value = combinedText;
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  } catch (error) {
+    console.error(error);
+  }
+}
+</script>
+
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 </style>
