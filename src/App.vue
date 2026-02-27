@@ -31,7 +31,7 @@ import TopBar from './components/TopBar.vue';
 import ImportModal from './components/ImportModal.vue'
 import SwitchModal from './components/SwitchModal.vue';
 import TypingTab from './components/TypingTab.vue'
-import { ref, computed } from 'vue';
+import { watch, ref, computed, onMounted } from 'vue';
 
 type Article = {
   title: string;
@@ -153,6 +153,26 @@ function deleteArticle(index: number) {
 const updateTypedData = (newTypedData: string[]) => {
   currentArticle.value.typedData = JSON.parse(JSON.stringify(newTypedData));
 }
+
+onMounted(() => {
+  console.log('App mounted');
+  const savedArticles = localStorage.getItem('articles');
+  if (savedArticles) {
+    const parsedArticles = JSON.parse(savedArticles);
+    // Convert creationDate back to Date objects
+    parsedArticles.forEach((article: Article) => {
+      if (article.creationDate) {
+        article.creationDate = new Date(article.creationDate);
+      }
+    });
+    articles.value = parsedArticles;
+  }
+});
+
+watch(articles, (newArticles) => {
+  console.log('Articles updated:', newArticles);
+  localStorage.setItem('articles', JSON.stringify(newArticles));
+}, { deep: true });
 
 </script>
 
