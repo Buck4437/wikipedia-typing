@@ -1,4 +1,12 @@
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('./Roboto_Mono/static/RobotoMono-Regular.ttf') format('truetype');
+}
+
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 15px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 16px;
+  min-height: 100vh;
+  max-width: 1000px;
+  margin: 0 auto;
 }
