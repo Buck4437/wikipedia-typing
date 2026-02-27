@@ -20,7 +20,7 @@ const options = [
         value: "import"
     },
     {
-        text: "Switch article",
+        text: "Imported articles",
         value: "switch"
     }
 ]
