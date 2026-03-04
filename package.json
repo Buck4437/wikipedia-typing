@@ -13,7 +13,10 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "vue": "^3.5.29"
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.5.0",
+    "vue": "^3.5.29",
+    "zhconv": "^0.4.1"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",

@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-mask">
+  <div class="modal-mask" @click.self="$emit('close')">
     <div class="modal">
       <button class="close-button" @click="$emit('close')">×</button>
       <slot></slot>
