@@ -20,7 +20,7 @@
                 type="text" 
                 v-model="inputs[index]"
                 ref="inputRefs"
-                @keydown="e => handleKeyDown(e, index)" 
+                @keydown="e => handleKeyDown(e, index)"
                 />
             </div>
           </td>
@@ -59,6 +59,10 @@ const handleKeyDown = (event: KeyboardEvent, index: number) => {
   const currentLength = inputs.value[index]?.length ?? 0;
   if (event.key.length === 1 && currentLength >= targetLength) {
     event.preventDefault();
+    const nextIndex = index + 1;
+    if (nextIndex < inputRefs.value.length) {
+      inputRefs.value[nextIndex]?.focus();
+    }
     return;
   }
   if (event.key === 'Enter') {
@@ -72,6 +76,22 @@ const handleKeyDown = (event: KeyboardEvent, index: number) => {
     const prevIndex = index - 1;
     if (prevIndex >= 0) {
       inputRefs.value[prevIndex]?.focus();
+    }
+  }
+}
+
+const handleInput = (event: Event, index: number) => {
+  const targetLength = props.parsedData[index]?.length ?? 0;
+  const currentLength = inputs.value[index]?.length ?? 0;
+  
+  // Move to next input when current line is completed
+  if (currentLength >= targetLength) {
+    const nextIndex = index + 1;
+    if (nextIndex < inputRefs.value.length) {
+      // Use setTimeout to ensure the input update is processed first
+      setTimeout(() => {
+        inputRefs.value[nextIndex]?.focus();
+      }, 0);
     }
   }
 }
